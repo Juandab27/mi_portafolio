@@ -145,7 +145,3 @@ Estos enlaces llevan a los repositorios correspondientes:
 Programmer Analyst · Ingeniería de Sistemas y Telecomunicaciones
 
 - GitHub: [@Juandab27](https://github.com/Juandab27)
-
-## 📄 Licencia
-
-Este repositorio no especifica una licencia de uso. Si deseas permitir que otras personas reutilicen o distribuyan el código, agrega un archivo `LICENSE` con la licencia que elijas.
