@@ -10,17 +10,30 @@ class SiteController {
     }
 
     public function manejarPeticion() {
-        // Capturar sección actual
         $url = isset($_GET['url']) ? rtrim($_GET['url'], '/') : 'inicio';
         $mensaje_db = "";
 
-        // Procesar formulario si es la sección contacto y viene por POST
-        if ($url === 'contacto' && $_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nombre'])) {
+        if (
+            $url === 'contacto' &&
+            $_SERVER["REQUEST_METHOD"] == "POST" &&
+            isset($_POST['nombre'], $_POST['correo'], $_POST['comentario'])
+        ) {
             $nombre_contacto = trim($_POST['nombre']);
+            $correo_contacto = trim($_POST['correo']);
+            $comentario_contacto = trim($_POST['comentario']);
 
-            if (!empty($nombre_contacto)) {
+            if (
+                !empty($nombre_contacto) &&
+                filter_var($correo_contacto, FILTER_VALIDATE_EMAIL) &&
+                !empty($comentario_contacto)
+            ) {
                 $modelo = new ContactoModel($this->conexion);
-                $exito = $modelo->guardarContacto($nombre_contacto);
+
+                $exito = $modelo->guardarContacto(
+                    $nombre_contacto,
+                    $correo_contacto,
+                    $comentario_contacto
+                );
 
                 if ($exito) {
                     $mensaje_db = "<p style='color: green; font-weight: bold;'>¡Mensaje guardado con éxito en la Base de Datos!</p>";
@@ -28,19 +41,27 @@ class SiteController {
                     $mensaje_db = "<p style='color: red;'>Error al guardar en la base de datos.</p>";
                 }
             } else {
-                $mensaje_db = "<p style='color: red;'>Por favor, escribe un nombre válido.</p>";
+                $mensaje_db = "<p style='color: red;'>Por favor, completa todos los campos con información válida.</p>";
             }
         }
 
-        // Cargar los componentes visuales (Vistas)
         require_once 'views/header.php';
 
         switch ($url) {
             case 'inicio':
                 require_once 'views/inicio.php';
                 break;
-            case 'servicios':
+            case 'sobre-mi':
+                require_once 'views/sobre-mi.php';
+                break;
+            case 'habilidades':
+                require_once 'views/habilidades.php';
+                break;
+            case 'proyectos':
                 require_once 'views/servicios.php';
+                break;
+            case 'intereses':
+                require_once 'views/intereses.php';
                 break;
             case 'contacto':
                 require_once 'views/contacto.php';
